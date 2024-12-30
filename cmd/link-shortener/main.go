@@ -5,14 +5,14 @@ import (
 	"os"
 
 	"github.com/lpernett/godotenv"
-	db "github.com/steliosmagalios/link-shortener/internal/database"
+	"github.com/steliosmagalios/link-shortener/internal/database"
 	"github.com/steliosmagalios/link-shortener/internal/database/repository"
 )
 
 func main() {
 	loadEnv()
 
-	db, _ := db.NewDatabase(os.Getenv("DATABASE_URL"))
+	db, _ := database.NewDatabase(os.Getenv("DATABASE_URL"))
 	queries := repository.New(db.Conn)
 
 	res, _ := queries.GetAllLinks(db.Ctx)
