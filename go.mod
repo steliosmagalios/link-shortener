@@ -2,7 +2,10 @@ module github.com/steliosmagalios/link-shortener
 
 go 1.23.3
 
-require github.com/jackc/pgx/v5 v5.7.2
+require (
+	github.com/jackc/pgx/v5 v5.7.2
+	github.com/lpernett/godotenv v0.0.0-20230527005122-0de1d4c5ef5e
+)
 
 require (
 	github.com/jackc/pgpassfile v1.0.0 // indirect
