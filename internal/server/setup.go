@@ -2,10 +2,10 @@ package server
 
 import "net/http"
 
-func NewServer(addr string) *http.Server {
+func NewServer(addr string, h http.Handler) *http.Server {
 	srv := http.Server{
 		Addr:    addr,
-		Handler: http.HandlerFunc(http.NotFound),
+		Handler: h,
 	}
 
 	return &srv

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/lpernett/godotenv"
+	v1 "github.com/steliosmagalios/link-shortener/internal/api/v1"
 	"github.com/steliosmagalios/link-shortener/internal/database"
 	"github.com/steliosmagalios/link-shortener/internal/database/repository"
 	"github.com/steliosmagalios/link-shortener/internal/server"
@@ -20,7 +21,7 @@ func main() {
 	o, _ := json.MarshalIndent(res, "", "\t")
 	println(string(o))
 
-	server := server.NewServer(":8888")
+	server := server.NewServer(":8888", v1.NewAPI())
 	server.ListenAndServe()
 }
 
