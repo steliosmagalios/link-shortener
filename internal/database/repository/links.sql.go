@@ -9,6 +9,38 @@ import (
 	"context"
 )
 
+const createLink = `-- name: CreateLink :one
+INSERT INTO links (
+  location, slug
+) VALUES (
+  $1, $2
+) RETURNING slug
+`
+
+type CreateLinkParams struct {
+	Location string `json:"location"`
+	Slug     string `json:"slug"`
+}
+
+func (q *Queries) CreateLink(ctx context.Context, arg CreateLinkParams) (string, error) {
+	row := q.db.QueryRow(ctx, createLink, arg.Location, arg.Slug)
+	var slug string
+	err := row.Scan(&slug)
+	return slug, err
+}
+
+const deleteLink = `-- name: DeleteLink :one
+DELETE FROM links
+WHERE slug = $1
+RETURNING slug
+`
+
+func (q *Queries) DeleteLink(ctx context.Context, slug string) (string, error) {
+	row := q.db.QueryRow(ctx, deleteLink, slug)
+	err := row.Scan(&slug)
+	return slug, err
+}
+
 const getAllLinks = `-- name: GetAllLinks :many
 SELECT id, location, slug FROM links
 `
@@ -31,4 +63,36 @@ func (q *Queries) GetAllLinks(ctx context.Context) ([]Link, error) {
 		return nil, err
 	}
 	return items, nil
+}
+
+const getLinkFromSlug = `-- name: GetLinkFromSlug :one
+SELECT location FROM links
+WHERE slug = $1
+LIMIT 1
+`
+
+func (q *Queries) GetLinkFromSlug(ctx context.Context, slug string) (string, error) {
+	row := q.db.QueryRow(ctx, getLinkFromSlug, slug)
+	var location string
+	err := row.Scan(&location)
+	return location, err
+}
+
+const updateLink = `-- name: UpdateLink :one
+UPDATE links
+SET location = $2
+WHERE slug = $1
+RETURNING id, location, slug
+`
+
+type UpdateLinkParams struct {
+	Slug     string `json:"slug"`
+	Location string `json:"location"`
+}
+
+func (q *Queries) UpdateLink(ctx context.Context, arg UpdateLinkParams) (Link, error) {
+	row := q.db.QueryRow(ctx, updateLink, arg.Slug, arg.Location)
+	var i Link
+	err := row.Scan(&i.ID, &i.Location, &i.Slug)
+	return i, err
 }
