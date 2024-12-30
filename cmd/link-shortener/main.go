@@ -7,6 +7,7 @@ import (
 	"github.com/lpernett/godotenv"
 	"github.com/steliosmagalios/link-shortener/internal/database"
 	"github.com/steliosmagalios/link-shortener/internal/database/repository"
+	"github.com/steliosmagalios/link-shortener/internal/server"
 )
 
 func main() {
@@ -19,6 +20,8 @@ func main() {
 	o, _ := json.MarshalIndent(res, "", "\t")
 	println(string(o))
 
+	server := server.NewServer(":8888")
+	server.ListenAndServe()
 }
 
 func loadEnv() {
