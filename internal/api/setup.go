@@ -13,7 +13,7 @@ func New(db database.Database) http.Handler {
 
 	mux := http.NewServeMux()
 
-	// Links subdomain
+	// Links subroutes
 	linkHandler := handlers.NewLinkHandler(queries, &db)
 	mux.HandleFunc("/links", linkHandler.GetAll)
 

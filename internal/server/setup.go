@@ -4,6 +4,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
+
+	"github.com/steliosmagalios/link-shortener/internal/server/middleware"
 )
 
 type Server struct {
@@ -11,9 +13,12 @@ type Server struct {
 }
 
 func New(addr string, h http.Handler) *Server {
+	// Setup Middleware
+	stack := middleware.CreateStack(middleware.Logging)
+
 	srv := http.Server{
 		Addr:    addr,
-		Handler: h,
+		Handler: stack(h),
 	}
 
 	return &Server{
@@ -26,5 +31,4 @@ func (s *Server) Start() {
 	if err := s.srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 		log.Fatalf("HTTP server error: %v", err)
 	}
-
 }
