@@ -6,26 +6,29 @@ import (
 	"os"
 
 	"github.com/lpernett/godotenv"
-	v1 "github.com/steliosmagalios/link-shortener/internal/api"
+	"github.com/steliosmagalios/link-shortener/internal/api"
 	"github.com/steliosmagalios/link-shortener/internal/database"
 	"github.com/steliosmagalios/link-shortener/internal/server"
 )
 
 func main() {
-	loadEnv()
+	loadEnv() // Load env variables
 
-	db, _ := database.NewDatabase(os.Getenv("DATABASE_URL"))
+	// Initialize database
+	db := database.NewDatabase(os.Getenv("DATABASE_URL"))
 
+	// Setup router
 	router := http.NewServeMux()
-	router.Handle("/api/v1/", http.StripPrefix("/api/v1", v1.NewAPI(&db)))
+	router.Handle("/api/v1/", http.StripPrefix("/api/v1", api.New(db)))
 
-	server := server.NewServer(os.Getenv("APP_ADDR"), router)
-	log.Fatalln(server.ListenAndServe())
+	// Setup and start server
+	srv := server.New(os.Getenv("APP_ADDR"), router)
+	srv.Start()
 }
 
 func loadEnv() {
 	err := godotenv.Load()
 	if err != nil {
-		panic("Failed to load environment variables!")
+		log.Fatalln("Error occured while reading environment variables. Error:", err)
 	}
 }
