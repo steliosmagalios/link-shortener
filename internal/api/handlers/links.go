@@ -1,21 +1,21 @@
 package handlers
 
 import (
+	"context"
 	"net/http"
 
-	"github.com/steliosmagalios/link-shortener/internal/database"
 	"github.com/steliosmagalios/link-shortener/internal/database/repository"
 )
 
 type LinkHandler struct {
 	queries *repository.Queries
-	db      *database.Database
+	ctx     context.Context
 }
 
-func NewLinkHandler(q *repository.Queries, db *database.Database) *LinkHandler {
+func NewLinkHandler(ctx context.Context, q *repository.Queries) *LinkHandler {
 	return &LinkHandler{
 		queries: q,
-		db:      db,
+		ctx:     ctx,
 	}
 }
 

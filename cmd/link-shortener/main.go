@@ -18,11 +18,11 @@ func main() {
 	ctx := context.Background()
 
 	// Initialize database
-	db := database.NewDatabase(ctx, os.Getenv("DATABASE_URL"))
+	conn := database.NewDatabase(ctx, os.Getenv("DATABASE_URL"))
 
 	// Setup router
 	router := http.NewServeMux()
-	router.Handle("/api/v1/", http.StripPrefix("/api/v1", api.New(db)))
+	router.Handle("/api/v1/", http.StripPrefix("/api/v1", api.New(ctx, conn)))
 
 	// Setup and start server
 	srv := server.New(os.Getenv("APP_ADDR"), router)

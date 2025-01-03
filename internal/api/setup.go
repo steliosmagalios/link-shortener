@@ -1,20 +1,21 @@
 package api
 
 import (
+	"context"
 	"net/http"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/steliosmagalios/link-shortener/internal/api/handlers"
-	"github.com/steliosmagalios/link-shortener/internal/database"
 	"github.com/steliosmagalios/link-shortener/internal/database/repository"
 )
 
-func New(db database.Database) http.Handler {
-	queries := repository.New(db.Conn) // Initialize queries
+func New(ctx context.Context, conn *pgx.Conn) http.Handler {
+	queries := repository.New(conn) // Initialize queries
 
 	mux := http.NewServeMux()
 
 	// Links subroutes
-	linkHandler := handlers.NewLinkHandler(queries, &db)
+	linkHandler := handlers.NewLinkHandler(ctx, queries)
 	mux.HandleFunc("GET /links", linkHandler.FindAll)
 	mux.HandleFunc("POST /links", linkHandler.CreateOne)
 
