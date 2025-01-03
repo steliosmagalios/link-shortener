@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -14,8 +15,10 @@ import (
 func main() {
 	loadEnv() // Load env variables
 
+	ctx := context.Background()
+
 	// Initialize database
-	db := database.NewDatabase(os.Getenv("DATABASE_URL"))
+	db := database.NewDatabase(ctx, os.Getenv("DATABASE_URL"))
 
 	// Setup router
 	router := http.NewServeMux()

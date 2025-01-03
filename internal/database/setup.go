@@ -12,8 +12,7 @@ type Database struct {
 	Ctx  context.Context
 }
 
-func NewDatabase(connString string) Database {
-	ctx := context.Background()
+func NewDatabase(ctx context.Context, connString string) Database {
 	conn, err := pgx.Connect(ctx, connString)
 
 	if err != nil {
