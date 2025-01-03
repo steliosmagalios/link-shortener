@@ -15,7 +15,12 @@ func New(db database.Database) http.Handler {
 
 	// Links subroutes
 	linkHandler := handlers.NewLinkHandler(queries, &db)
-	mux.HandleFunc("/links", linkHandler.GetAll)
+	mux.HandleFunc("GET /links", linkHandler.FindAll)
+	mux.HandleFunc("POST /links", linkHandler.CreateOne)
+
+	mux.HandleFunc("GET /links/{slug}", linkHandler.FindBySlug)
+	mux.HandleFunc("PUT /links/{slug}", linkHandler.UpdateOne)
+	mux.HandleFunc("DELETE /links/{slug}", linkHandler.DeleteOne)
 
 	return mux
 }

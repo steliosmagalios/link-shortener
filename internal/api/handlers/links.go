@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/steliosmagalios/link-shortener/internal/database"
@@ -20,10 +19,12 @@ func NewLinkHandler(q *repository.Queries, db *database.Database) *LinkHandler {
 	}
 }
 
-func (h *LinkHandler) GetAll(w http.ResponseWriter, r *http.Request) {
-	data, err := h.queries.GetAllLinks(h.db.Ctx)
-	if err != nil {
-		return
-	}
-	json.NewEncoder(w).Encode(data)
-}
+func (h *LinkHandler) FindAll(w http.ResponseWriter, r *http.Request) {}
+
+func (h *LinkHandler) FindBySlug(w http.ResponseWriter, r *http.Request) {}
+
+func (h *LinkHandler) CreateOne(w http.ResponseWriter, r *http.Request) {}
+
+func (h *LinkHandler) UpdateOne(w http.ResponseWriter, r *http.Request) {}
+
+func (h *LinkHandler) DeleteOne(w http.ResponseWriter, r *http.Request) {}
