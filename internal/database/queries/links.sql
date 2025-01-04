@@ -1,24 +1,24 @@
--- name: GetAllLinks :many
+-- name: FindAll :many
 SELECT * FROM links;
 
--- name: GetLinkFromSlug :one
-SELECT location FROM links
+-- name: FindBySlug :one
+SELECT * FROM links
 WHERE slug = $1
 LIMIT 1;
 
--- name: CreateLink :one
+-- name: InsertOne :one
 INSERT INTO links (
   location, slug
 ) VALUES (
   $1, $2
-) RETURNING slug;
+) RETURNING *;
 
--- name: DeleteLink :one
+-- name: DeleteBySlug :one
 DELETE FROM links
 WHERE slug = $1
-RETURNING slug;
+RETURNING *;
 
--- name: UpdateLink :one
+-- name: UpdateLocation :one
 UPDATE links
 SET location = $2
 WHERE slug = $1

@@ -6,6 +6,7 @@ sql:
     gen:
       go:
         emit_json_tags: true
+        emit_empty_slices: true
         sql_package: "pgx/v5"
         package: "repository"
         out: "internal/database/repository"

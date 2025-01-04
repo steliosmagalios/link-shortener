@@ -17,7 +17,7 @@ func New(ctx context.Context, conn *pgx.Conn) http.Handler {
 	// Links subroutes
 	linkHandler := handlers.NewLinkHandler(ctx, queries)
 	mux.HandleFunc("GET /links", linkHandler.FindAll)
-	mux.HandleFunc("POST /links", linkHandler.CreateOne)
+	mux.HandleFunc("POST /links", linkHandler.InsertOne)
 
 	mux.HandleFunc("GET /links/{slug}", linkHandler.FindBySlug)
 	mux.HandleFunc("PUT /links/{slug}", linkHandler.UpdateOne)

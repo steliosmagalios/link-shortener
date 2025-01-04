@@ -9,49 +9,30 @@ import (
 	"context"
 )
 
-const createLink = `-- name: CreateLink :one
-INSERT INTO links (
-  location, slug
-) VALUES (
-  $1, $2
-) RETURNING slug
-`
-
-type CreateLinkParams struct {
-	Location string `json:"location"`
-	Slug     string `json:"slug"`
-}
-
-func (q *Queries) CreateLink(ctx context.Context, arg CreateLinkParams) (string, error) {
-	row := q.db.QueryRow(ctx, createLink, arg.Location, arg.Slug)
-	var slug string
-	err := row.Scan(&slug)
-	return slug, err
-}
-
-const deleteLink = `-- name: DeleteLink :one
+const deleteBySlug = `-- name: DeleteBySlug :one
 DELETE FROM links
 WHERE slug = $1
-RETURNING slug
+RETURNING id, location, slug
 `
 
-func (q *Queries) DeleteLink(ctx context.Context, slug string) (string, error) {
-	row := q.db.QueryRow(ctx, deleteLink, slug)
-	err := row.Scan(&slug)
-	return slug, err
+func (q *Queries) DeleteBySlug(ctx context.Context, slug string) (Link, error) {
+	row := q.db.QueryRow(ctx, deleteBySlug, slug)
+	var i Link
+	err := row.Scan(&i.ID, &i.Location, &i.Slug)
+	return i, err
 }
 
-const getAllLinks = `-- name: GetAllLinks :many
+const findAll = `-- name: FindAll :many
 SELECT id, location, slug FROM links
 `
 
-func (q *Queries) GetAllLinks(ctx context.Context) ([]Link, error) {
-	rows, err := q.db.Query(ctx, getAllLinks)
+func (q *Queries) FindAll(ctx context.Context) ([]Link, error) {
+	rows, err := q.db.Query(ctx, findAll)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []Link
+	items := []Link{}
 	for rows.Next() {
 		var i Link
 		if err := rows.Scan(&i.ID, &i.Location, &i.Slug); err != nil {
@@ -65,33 +46,53 @@ func (q *Queries) GetAllLinks(ctx context.Context) ([]Link, error) {
 	return items, nil
 }
 
-const getLinkFromSlug = `-- name: GetLinkFromSlug :one
-SELECT location FROM links
+const findBySlug = `-- name: FindBySlug :one
+SELECT id, location, slug FROM links
 WHERE slug = $1
 LIMIT 1
 `
 
-func (q *Queries) GetLinkFromSlug(ctx context.Context, slug string) (string, error) {
-	row := q.db.QueryRow(ctx, getLinkFromSlug, slug)
-	var location string
-	err := row.Scan(&location)
-	return location, err
+func (q *Queries) FindBySlug(ctx context.Context, slug string) (Link, error) {
+	row := q.db.QueryRow(ctx, findBySlug, slug)
+	var i Link
+	err := row.Scan(&i.ID, &i.Location, &i.Slug)
+	return i, err
 }
 
-const updateLink = `-- name: UpdateLink :one
+const insertOne = `-- name: InsertOne :one
+INSERT INTO links (
+  location, slug
+) VALUES (
+  $1, $2
+) RETURNING id, location, slug
+`
+
+type InsertOneParams struct {
+	Location string `json:"location"`
+	Slug     string `json:"slug"`
+}
+
+func (q *Queries) InsertOne(ctx context.Context, arg InsertOneParams) (Link, error) {
+	row := q.db.QueryRow(ctx, insertOne, arg.Location, arg.Slug)
+	var i Link
+	err := row.Scan(&i.ID, &i.Location, &i.Slug)
+	return i, err
+}
+
+const updateLocation = `-- name: UpdateLocation :one
 UPDATE links
 SET location = $2
 WHERE slug = $1
 RETURNING id, location, slug
 `
 
-type UpdateLinkParams struct {
+type UpdateLocationParams struct {
 	Slug     string `json:"slug"`
 	Location string `json:"location"`
 }
 
-func (q *Queries) UpdateLink(ctx context.Context, arg UpdateLinkParams) (Link, error) {
-	row := q.db.QueryRow(ctx, updateLink, arg.Slug, arg.Location)
+func (q *Queries) UpdateLocation(ctx context.Context, arg UpdateLocationParams) (Link, error) {
+	row := q.db.QueryRow(ctx, updateLocation, arg.Slug, arg.Location)
 	var i Link
 	err := row.Scan(&i.ID, &i.Location, &i.Slug)
 	return i, err
