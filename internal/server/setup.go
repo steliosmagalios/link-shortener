@@ -14,7 +14,10 @@ type Server struct {
 
 func New(addr string, h http.Handler) *Server {
 	// Setup Middleware
-	stack := middleware.CreateStack(middleware.Logging)
+	stack := middleware.CreateStack(
+		middleware.Logging,
+		middleware.EnableCORS,
+	)
 
 	srv := http.Server{
 		Addr:    addr,
