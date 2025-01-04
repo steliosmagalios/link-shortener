@@ -19,6 +19,7 @@ func main() {
 
 	// Initialize database
 	conn := database.NewDatabase(ctx, os.Getenv("DATABASE_URL"))
+	defer conn.Close(ctx)
 
 	// Setup router
 	router := http.NewServeMux()
