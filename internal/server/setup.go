@@ -30,7 +30,7 @@ func New(addr string, h http.Handler) *Server {
 }
 
 func (s *Server) Start() {
-	log.Printf("Server starting and listening on http://%v", s.srv.Addr)
+	log.Printf("Server starting and listening on port %v", s.srv.Addr)
 	if err := s.srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 		log.Fatalf("HTTP server error: %v", err)
 	}

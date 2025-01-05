@@ -26,7 +26,7 @@ func main() {
 	router.Handle("/api/v1/", http.StripPrefix("/api/v1", api.New(ctx, conn)))
 
 	// Setup and start server
-	srv := server.New(os.Getenv("APP_ADDR"), router)
+	srv := server.New(os.Getenv("PORT"), router)
 	srv.Start()
 }
 
