@@ -24,6 +24,9 @@ func main() {
 	// Setup router
 	router := http.NewServeMux()
 	router.Handle("/api/v1/", http.StripPrefix("/api/v1", api.New(ctx, conn)))
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { // for healthcheck
+		w.WriteHeader(200)
+	})
 
 	// Setup and start server
 	srv := server.New(os.Getenv("PORT"), router)
