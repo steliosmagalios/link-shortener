@@ -20,7 +20,7 @@ func main() {
 		log.Fatalln("ERROR: ", err.Error())
 	}
 
-	if err := m.Up(); err != nil {
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
 		log.Fatal(err)
 	}
 
