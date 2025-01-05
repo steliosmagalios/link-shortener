@@ -1,0 +1,2 @@
+# ignore dev-related compose file(s)
+docker-compose.dev.yml
