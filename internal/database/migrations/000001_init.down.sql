@@ -1,3 +1,3 @@
-DROP INDEX slug_index;
+DROP INDEX IF EXISTS slug_index;
 
-DROP TABLE links;
+DROP TABLE IF EXISTS links;
